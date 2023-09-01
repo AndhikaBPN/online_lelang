@@ -53,5 +53,3 @@ Route::group(['middleware'=>['api.pengguna']], function() {
     Route::get('/getDetailhistory/{id}', [HistoryC::class,'show']);
     Route::get('/gethistory', [HistoryC::class,'index']);
 });
-
-
