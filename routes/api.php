@@ -28,6 +28,7 @@ Route::post('/login', [UserC::class,'login']);
 
 // ADMIN
 Route::group(['middleware'=>['api.admin']], function(){
+    
     // ADD PETUGAS
     Route::post('/registerPetugas', [UserC::class,'registerPetugas']);
 

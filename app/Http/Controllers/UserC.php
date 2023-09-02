@@ -148,6 +148,7 @@ class UserC
     public function logout(Request $req){
         // Auth::logout();
         $cookie = Cookie::forget('token:root');
+        $removeToken = JWTAuth::invalidate(JWTAuth::getToken());
         // $cookie = CookiEvent::forget('token:root');
         // $req->session()->invalidate();
         // $req->session()->regenerateToken();
