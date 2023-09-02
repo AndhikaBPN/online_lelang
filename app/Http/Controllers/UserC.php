@@ -42,7 +42,7 @@ class UserC
             'no_hp' => 'required|numeric|min:11',
             'email' => 'required|string|max:255|unique:users',
             'username' => 'required|string|unique:users',
-            'password' => 'required|string|min:4|'
+            'password' => 'required|string|min:4|confirmed'
         ]);
 
         if($validate->fails()){
@@ -84,7 +84,7 @@ class UserC
             'no_hp' => 'required|numeric|min:11',
             'email' => 'required|string|max:255|unique:users',
             'username' => 'required|string|unique:users',
-            'password' => 'required|string|min:4'
+            'password' => 'required|string|min:4|confirmed'
         ]);
 
         if($validate->fails()){
@@ -147,11 +147,11 @@ class UserC
 
     public function logout(Request $req){
         // Auth::logout();
-        $cookie = Cookie::forget('token:root');
-        $removeToken = JWTAuth::invalidate(JWTAuth::getToken());
         // $cookie = CookiEvent::forget('token:root');
         // $req->session()->invalidate();
         // $req->session()->regenerateToken();
+        $cookie = Cookie::forget('token:root');
+        $removeToken = JWTAuth::invalidate(JWTAuth::getToken());
 
         return response()->json(['message'=>'Berhasil logout'], 200)->withCookie($cookie);
         // return redirect('/');
