@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use JWTAuth;
 
-class admin
+class CheckRole
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class admin
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
@@ -31,18 +31,18 @@ class admin
             }
         }
 
-        if (Auth::guard('api')->check() && $request->user()->role == "admin") {
-            return $next($request);
-        } else {
-            return $this->unauthorized();
+        foreach($roles as $role){
+            if($request->user()->role == $role){
+                return $next($request);
+            }
         }
-
+        return $this->unauthorized();
     }
 
     public function unauthorized($message = null){
         return response()->json([
-            'message' => $message ? $message : 'Anda tidak memiliki akses12321',
             'success' => false,
+            'message' => $message ? $message : 'Anda tidak memiliki akses',
         ], 401);
     }
 }

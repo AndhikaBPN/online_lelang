@@ -16,7 +16,8 @@ class CreateLelangTable extends Migration
         Schema::create('lelang', function (Blueprint $table) {
             $table->BigIncrements('id_lelang');
             $table->unsignedBigInteger('id_barang');
-            $table->date('tgl_lelang');
+            $table->dateTime('tgl_lelang');
+            $table->dateTime('end_at');
             $table->integer('harga_akhir')->nullable();
             $table->unsignedBigInteger('id_pengguna')->nullable();
             $table->unsignedBigInteger('id_petugas');

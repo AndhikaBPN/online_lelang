@@ -18,39 +18,29 @@ use App\Http\Controllers\HistoryC;
 |
 */
 
+Route::post('/registerAdmin', [UserC::class,'registerAdmin']);
+Route::post('registerPengguna', [UserC::class,'registerPengguna']);
+Route::post('/registerPetugas', [UserC::class,'registerPetugas'])->middleware('role:admin');
+Route::post('/login', [UserC::class,'login']);
+
 Route::group(['middleware'=>['jwt.verify']], function() {
     Route::post('/logout', [UserC::class,'logout']);
 });
 
-Route::post('/registerAdmin', [UserC::class,'registerAdmin']);
-Route::post('registerPengguna', [UserC::class,'registerPengguna']);
-Route::post('/login', [UserC::class,'login']);
+// BARANG
+Route::get('barang', [BarangC::class,'index'])->middleware('role:admin,petugas,pengguna');
+Route::get('barang/{id_barang}', [BarangC::class,'show'])->middleware('role:admin,petugas,pengguna');
+Route::post('barang', [BarangC::class,'store'])->middleware('role:admin,petugas');
+Route::put('barang/{id_barang}', [BarangC::class,'update'])->middleware('role:admin,petugas');
+Route::delete('barang/{id_barang}', [BarangC::class,'destroy'])->middleware('role:admin,petugas');
 
-// ADMIN
-Route::group(['middleware'=>['api.admin']], function(){
-    
-    // ADD PETUGAS
-    Route::post('/registerPetugas', [UserC::class,'registerPetugas']);
+// Lelang
+Route::get('lelang', [LelangC::class,'index'])->middleware('role:admin,petugas,pengguna');
+Route::get('lelang/{id_lelang}', [LelangC::class,'show'])->middleware('role:admin,petugas,pengguna');
+Route::post('lelang', [LelangC::class,'store'])->middleware('role:admin,petugas,pengguna');
+Route::post('lelang/close/{id_lelang}', [LelangC::class,'changeStatus'])->middleware('role:admin,petugas');
 
-    // BARANG
-    Route::get('/getbarang', [BarangC::class, 'index']);
-    Route::get('/getbarang/{id}', [BarangC::class, 'show']);
-    Route::post('/insertbarang', [BarangC::class,'store']);
-    Route::put('/editbarang/{id}', [BarangC::class,'update']);
-    Route::put('/hapusbarang/{id}', [BarangC::class,'destroy']);
-
-    // LELANG
-    Route::get('/getlelang', [LelangC::class,'index']);
-    Route::get('/allLelang', [LelangC::class,'index2']);
-    Route::post('/insertlelang', [LelangC::class, 'store']);
-    Route::put('/deletelelang/{id}', [LelangC::class,'destroy']);
-
-    // HISTORY
-    Route::get('/gethistory', [HistoryC::class,'index']);
-    Route::get('/getDetailhistory/{id}', [HistoryC::class,'show']);
-});
-
-Route::group(['middleware'=>['api.pengguna']], function() {
-    Route::get('/getDetailhistory/{id}', [HistoryC::class,'show']);
-    Route::get('/gethistory', [HistoryC::class,'index']);
-});
+// HISTORY
+Route::get('history', [HistoryC::class, 'index'])->middleware('role:pengguna,admin,petugas');
+Route::get('history/{id_history}', [HistoryC::class,'show'])->middleware('role:admin,petugas,pengguna');
+Route::post('history/{id_lelang}', [HistoryC::class, 'store'])->middleware('role:pengguna');

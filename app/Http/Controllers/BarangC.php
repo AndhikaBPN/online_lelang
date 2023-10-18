@@ -19,7 +19,10 @@ class BarangC
      */
     public function index()
     {
-        $barangs = DB::table('barang')->where('deleted', 0)->get();
+        $barangs = DB::table('barang')
+                    ->select('*')
+                    ->where('deleted', 0)
+                    ->get();
         return response()->json(['status'=>'Success', 'data'=>['content'=>$barangs]], 200);
     }
 
@@ -61,8 +64,8 @@ class BarangC
                 $data->deskripsi_barang = $request->deskripsi_barang;
                 $data->created_by = auth()->user()->id;
                 $data->created_at = Carbon::now();
-                $data->updated_at = 0;
-                $data->updated_at = null;
+                $data->updated_by = 0;
+                $data->updated_at = Carbon::now();
 
                 if($request->file('gambar')){
                     $gambar = $request->gambar;
@@ -165,6 +168,8 @@ class BarangC
     {
         try {
             $data = Barang::find($id);
+            $data->updated_by = auth()->user()->id;
+            $data->updated_at = Carbon::now();
             $data->deleted = 1;
             $data->update();
             return response()->json(['status'=>'success', 'data'=>['message'=>'Data berhasil dihapus']], 200);

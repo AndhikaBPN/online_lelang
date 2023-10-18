@@ -31,9 +31,13 @@ class pengguna
             }
         }
 
+        // return response()->json($request->user()->role, 200);
+        
         if (Auth::guard('api')->check() && $request->user()->role == "pengguna") {
+            error_log("hahahah");
             return $next($request);
         } else {
+            error_log("error");
             return $this->unauthorized();
         }
 
@@ -41,8 +45,8 @@ class pengguna
 
     public function unauthorized($message = null){
         return response()->json([
-            'message' => $message ? $message : 'Anda tidak memiliki akses',
             'success' => false,
+            'message' => $message ? $message : 'Anda tidak memiliki akses23123',
         ], 401);
     }
 }
